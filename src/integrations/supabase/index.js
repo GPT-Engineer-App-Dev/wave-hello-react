@@ -40,7 +40,16 @@ Comment // table: comments
     post_id: number // foreign key to Post
     user_id: number // foreign key to User
     text: string
-	
+
+Profile // table: profiles
+    id: number
+    user_id: number // foreign key to User
+    bio: string
+
+Like // table: likes
+    id: number
+    user_id: number // foreign key to User
+    post_id: number // foreign key to Post
 */
 
 // Hooks for User table
@@ -162,6 +171,88 @@ export const useDeleteComment = () => {
         mutationFn: (id) => fromSupabase(supabase.from('comments').delete().eq('id', id)),
         onSuccess: () => {
             queryClient.invalidateQueries('comments');
+        },
+    });
+};
+
+// Hooks for Profile table
+export const useProfiles = () => useQuery({
+    queryKey: ['profiles'],
+    queryFn: () => fromSupabase(supabase.from('profiles').select('*')),
+});
+
+export const useProfile = (id) => useQuery({
+    queryKey: ['profile', id],
+    queryFn: () => fromSupabase(supabase.from('profiles').select('*').eq('id', id).single()),
+});
+
+export const useAddProfile = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (newProfile) => fromSupabase(supabase.from('profiles').insert([newProfile])),
+        onSuccess: () => {
+            queryClient.invalidateQueries('profiles');
+        },
+    });
+};
+
+export const useUpdateProfile = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (updatedProfile) => fromSupabase(supabase.from('profiles').update(updatedProfile).eq('id', updatedProfile.id)),
+        onSuccess: () => {
+            queryClient.invalidateQueries('profiles');
+        },
+    });
+};
+
+export const useDeleteProfile = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (id) => fromSupabase(supabase.from('profiles').delete().eq('id', id)),
+        onSuccess: () => {
+            queryClient.invalidateQueries('profiles');
+        },
+    });
+};
+
+// Hooks for Like table
+export const useLikes = () => useQuery({
+    queryKey: ['likes'],
+    queryFn: () => fromSupabase(supabase.from('likes').select('*')),
+});
+
+export const useLike = (id) => useQuery({
+    queryKey: ['like', id],
+    queryFn: () => fromSupabase(supabase.from('likes').select('*').eq('id', id).single()),
+});
+
+export const useAddLike = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (newLike) => fromSupabase(supabase.from('likes').insert([newLike])),
+        onSuccess: () => {
+            queryClient.invalidateQueries('likes');
+        },
+    });
+};
+
+export const useUpdateLike = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (updatedLike) => fromSupabase(supabase.from('likes').update(updatedLike).eq('id', updatedLike.id)),
+        onSuccess: () => {
+            queryClient.invalidateQueries('likes');
+        },
+    });
+};
+
+export const useDeleteLike = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (id) => fromSupabase(supabase.from('likes').delete().eq('id', id)),
+        onSuccess: () => {
+            queryClient.invalidateQueries('likes');
         },
     });
 };
